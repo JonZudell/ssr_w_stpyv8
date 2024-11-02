@@ -7,53 +7,48 @@ var __element = function() {
       return this.childNodes && this.childNodes.length > 0;
     },
     appendChild: function(child) {
-      console.log('Before appendChild:', this.childNodes);
       if (!this.childNodes) {
         this.childNodes = [];
       }
       this.childNodes.push(child);
-      console.log('After appendChild:', this.childNodes);
+      console.log('appendChild called');
     },
     removeChild: function(child) {
-      console.log('Before removeChild:', this.childNodes);
       if (this.childNodes) {
         var index = this.childNodes.indexOf(child);
         if (index > -1) {
           this.childNodes.splice(index, 1);
-          console.log('After removeChild:', this.childNodes);
+          console.log('removeChild called');
         }
       }
     },
     setAttribute: function(name, value) {
-      console.log('Before setAttribute:', this.attributes);
       if (!this.attributes) {
         this.attributes = {};
       }
       this.attributes[name] = value;
-      console.log('After setAttribute:', this.attributes);
+      console.log('setAttribute called with', name, value);
     },
     getAttribute: function(name) {
-      console.log('getAttribute called with', name);
       if (this.attributes && this.attributes[name]) {
+        console.log('getAttribute called with', name);
         return this.attributes[name];
       }
       return null;
     },
     addEventListener: function(type, listener) {
-      console.log('Before addEventListener:', this[type]);
+      console.log('addEventListener called with', type);
       if (!this[type]) {
         this[type] = [];
       }
       this[type].push(listener);
-      console.log('After addEventListener:', this[type]);
     },
     removeEventListener: function(type, listener) {
-      console.log('Before removeEventListener:', this[type]);
+      console.log('removeEventListener called with', type);
       if (this[type]) {
         var index = this[type].indexOf(listener);
         if (index > -1) {
           this[type].splice(index, 1);
-          console.log('After removeEventListener:', this[type]);
         }
       }
     },
@@ -68,27 +63,33 @@ var __element = function() {
 }
 """
 _text_node = """
-var __textNode = {
-  textContent: '',
-  nodeType: 3, // Node.TEXT_NODE
-  ownerDocument: document
+var __textNode = function() {
+  return {
+    textContent: '',
+    nodeType: 3, // Node.TEXT_NODE
+    ownerDocument: document
+  }
 }
 """
 
 _comment_node = """
-var __commentNode = {
-  data: '',
-  nodeType: 8, // Node.COMMENT_NODE
-  ownerDocument: document
+var __commentNode = function() {
+  return {
+    data: '',
+    nodeType: 8, // Node.COMMENT_NODE
+    ownerDocument: document
+  }
 }
 """
 
 _document_fragment_node = """
-var __documentFragment = {
-  nodeType: 11, // Node.DOCUMENT_FRAGMENT_NODE
-  ownerDocument: document,
-  appendChild: function(child) {
-    console.log('appendChild called');
+var __documentFragment = function() {
+  return {
+    nodeType: 11, // Node.DOCUMENT_FRAGMENT_NODE
+    ownerDocument: document,
+    appendChild: function(child) {
+      console.log('appendChild called');
+    }
   }
 }
 """
@@ -126,17 +127,17 @@ _document = """var document = {
     return  __element();
   },
   createTextNode: function(text) {
-    var textNode = Object.assign({}, __textNode);
+    var textNode = __textNode();
     textNode.textContext = text
     return textNode;
   },
   createComment: function(data) {
-    var commentNode = Object.assign({}, __commentNode);
+    var commentNode =  __commentNode();
     commentNode.data = data;
     return commentNode;
   },
   createDocumentFragment: function() {
-    return Object.assign({}, __documentFragment);
+    return __documentFragment();
   },
   write: function(text) {
   },
